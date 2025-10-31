@@ -79,6 +79,7 @@ async def redirect_url(hash_str: str) -> Response:
     # responder con 302 (redirect temporal)
     try:
         response = Response(
+            content="",
             status_code=302,
             headers={"Location": long_url},
         )
