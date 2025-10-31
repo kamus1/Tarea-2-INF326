@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+package urlhit;
+
+// datos que contiene el mensje UrlHit
+// se pasan el hash, la url larga y el timestamp
+// aunque en el enunciado solo dice el url visitado lo que no queda claro es si se refiere a la url larga o al hash
+message UrlHit {
+  string hash = 1;
+  string long_url = 2;
+  string timestamp = 3;
+}
+
+// respuesta del servidor, un ack, simplemente un "ok"
+message Ack {
+  string status = 1;
+}
+
+// servicio de logging de urls
+service LogService {
+  rpc RegisterHit (UrlHit) returns (Ack);
+}
