@@ -23,7 +23,6 @@ def init_db():
         cur.execute("SELECT COUNT(*) FROM urls;")
         count = cur.fetchone()[0]
         if count == 0:
-            print("init_db: estableciendo secuencia inicial en %s", INITIAL_ID)
             cur.execute("DELETE FROM sqlite_sequence WHERE name='urls';")
             cur.execute(
                 "INSERT INTO sqlite_sequence (name, seq) VALUES ('urls', ?);",

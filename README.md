@@ -30,3 +30,22 @@ python -m arquitectura1.shortener.main
 ```shell
 python -m arquitectura1.log_service.main
 ```
+
+### Ejecutar Arquitectura 2
+
+1. Entrar a la carpeta de la arquitectura
+```shell
+cd arquitectura2
+cd shortener
+```
+
+2. Generar los certificados
+```shell
+python -m arquitectura2.shortener.generate_certs
+```
+
+3. Ejecutar shortener
+```shell
+python -m arquitectura2.shortener.main
+```
+
