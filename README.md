@@ -55,19 +55,28 @@ python -m arquitectura1.log_service.main
 
 ### Ejecutar Arquitectura 2
 
-1. Entrar a la carpeta de la arquitectura
-```shell
-cd arquitectura2
-cd shortener
-```
-
-2. Generar los certificados
+1. Generar (o regenerar) certificados TLS
 ```shell
 python -m arquitectura2.shortener.generate_certs
 ```
 
-3. Ejecutar shortener
+2. Ejecutar shortener
 ```shell
 python -m arquitectura2.shortener.main
 ```
+
+
+#### Endpoints Arquitectura 2
+
+- `POST https://127.0.0.1:8001/shorten`
+  - Cuerpo JSON: `{"url": "<url_larga>"}`.
+  - Respuesta: `{"short_url": "https://127.0.0.1:8001/<hash>"}`.
+  - Errores: `400` (payload inválido o sin `url`), `429` si se supera el rate limit.
+- `GET https://127.0.0.1:8001/<hash>`
+  - Redirección `301` a la URL original (cabecera `Location`), lo que permite al navegador cachear.
+  - Caché en memoria evita golpear la base en hashes populares (ver logs “cache hit/miss”).
+  - Si el hash no existe, responde `404`.
+
+
+
 

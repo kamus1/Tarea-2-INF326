@@ -1,4 +1,5 @@
 import sqlite3
+from typing import Optional
 
 from .config import DB_PATH, INITIAL_ID
 
@@ -30,56 +31,51 @@ def init_db():
             )
             conn.commit()
 
-    except Exception:
-        raise
-    
-    finally:
-        conn.close()
-        
-def new_id(long_url: str) -> int:
-    conn = sqlite3.connect(DB_PATH)
-    cur = conn.cursor()
-    try:
-        cur.execute("SELECT id FROM urls WHERE long_url = ?;", long_url)
-        conn.commit()
-        if cur.fetchone():
-            return -1
-        cur.execute("INSERT INTO urls (hash, long_url) VALUES (?, ?);", ("__temp__", long_url))
-        conn.commit()
-        new_id = cur.lastrowid
-        return new_id
-    except Exception:
-        raise
     finally:
         conn.close()
 
-# inserta una url en la base de datos
-def insert_url(id: int, hash_str: str) -> None:
+
+def insert_placeholder(long_url: str) -> int:
     conn = sqlite3.connect(DB_PATH)
     try:
         cur = conn.cursor()
-        cur.execute("UPDATE urls SET hash=? WHERE id=?;", (hash_str, id))
+        cur.execute(
+            "INSERT INTO urls (hash, long_url) VALUES (?, ?);",
+            ("__temp__", long_url),
+        )
         conn.commit()
-    
-    except Exception:
-        raise
-    
+        return cur.lastrowid
     finally:
         conn.close()
 
 
-# obtiene la url original a partir del hash
-def get_long_url(hash_str: str) -> str | None:
+def update_hash_for_id(row_id: int, hash_str: str) -> None:
     conn = sqlite3.connect(DB_PATH)
-    
+    try:
+        cur = conn.cursor()
+        cur.execute("UPDATE urls SET hash=? WHERE id=?;", (hash_str, row_id))
+        conn.commit()
+    finally:
+        conn.close()
+
+
+def get_long_url(hash_str: str) -> Optional[str]:
+    conn = sqlite3.connect(DB_PATH)
     try:
         cur = conn.cursor()
         cur.execute("SELECT long_url FROM urls WHERE hash = ?;", (hash_str,))
         row = cur.fetchone()
         return row[0] if row else None
+    finally:
+        conn.close()
 
-    except Exception:
-        raise
 
+def url_exists(long_url: str) -> bool:
+    conn = sqlite3.connect(DB_PATH)
+    try:
+        cur = conn.cursor()
+        cur.execute("SELECT 1 FROM urls WHERE long_url = ? LIMIT 1;", (long_url,))
+        row = cur.fetchone()
+        return bool(row)
     finally:
         conn.close()
