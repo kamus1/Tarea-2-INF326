@@ -6,7 +6,7 @@ Integrantes:
     Javier Hormaechea: 
     Benjamin Camus ROL: 202173072-9
 
-### Requerimientos
+### Requisitos
 
 1. Estar en la ruta raíz del repositorio `Tarea-2-INF326`
 
