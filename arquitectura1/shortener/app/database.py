@@ -43,34 +43,56 @@ def init_db():
         conn.close()
         logger.debug("init_db: conexión cerrada")
 
-# inserta una url en la base de datos
-def insert_url(hash_str: str, long_url: str) -> int:
-    logger.debug("insert_url: almacenando hash=%s long_url=%s", hash_str, long_url)
+# inserta una url con hash temporal y retorna el id generado
+def insert_placeholder(long_url: str) -> int:
+    logger.debug("insert_placeholder: creando registro temporal para %s", long_url)
     conn = sqlite3.connect(DB_PATH)
     try:
         cur = conn.cursor()
         cur.execute(
             "INSERT INTO urls (hash, long_url) VALUES (?, ?);",
-            (hash_str, long_url),
+            ("__temp__", long_url),
         )
         conn.commit()
         new_id = cur.lastrowid
         logger.info(
-            "insert_url: fila creada con id=%s hash=%s",
+            "insert_placeholder: fila creada con id=%s",
             new_id,
-            hash_str,
         )
         return new_id
     except Exception:
         logger.exception(
-            "insert_url: error al insertar hash=%s long_url=%s",
-            hash_str,
+            "insert_placeholder: error al insertar long_url=%s",
             long_url,
         )
         raise
     finally:
         conn.close()
-        logger.debug("insert_url: conexión cerrada")
+        logger.debug("insert_placeholder: conexión cerrada")
+
+
+# actualiza el hash definitivo asociado a un id
+def update_hash_for_id(row_id: int, hash_str: str) -> None:
+    logger.debug("update_hash_for_id: id=%s hash=%s", row_id, hash_str)
+    conn = sqlite3.connect(DB_PATH)
+    try:
+        cur = conn.cursor()
+        cur.execute(
+            "UPDATE urls SET hash=? WHERE id=?;",
+            (hash_str, row_id),
+        )
+        conn.commit()
+        logger.info("update_hash_for_id: hash actualizado para id=%s", row_id)
+    except Exception:
+        logger.exception(
+            "update_hash_for_id: error al actualizar id=%s hash=%s",
+            row_id,
+            hash_str,
+        )
+        raise
+    finally:
+        conn.close()
+        logger.debug("update_hash_for_id: conexión cerrada")
 
 
 # obtiene la url original a partir del hash

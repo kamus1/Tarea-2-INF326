@@ -3,7 +3,13 @@ import logging
 from litestar import Litestar
 import uvicorn
 
-from arquitectura1.shortener.app.config import DB_PATH, HTTP_HOST, HTTP_PORT
+from arquitectura1.shortener.app.config import (
+    DB_PATH,
+    HTTP_HOST,
+    HTTP_PORT,
+    SSL_CERT_PATH,
+    SSL_KEY_PATH,
+)
 from arquitectura1.shortener.app.database import init_db
 from arquitectura1.shortener.app.routes import shorten_url, redirect_url
 
@@ -28,6 +34,12 @@ if __name__ == "__main__":
         raise
 
     app = create_app()
+
+    if not SSL_CERT_PATH.exists() or not SSL_KEY_PATH.exists():
+        logger.error(
+            "Certificados TLS no encontrados. Ejecute 'python -m arquitectura1.shortener.generate_certs'"
+        )
+        raise FileNotFoundError("No se encontraron los certificados TLS requeridos.")
     logger.info(
         "shortener: servidor HTTP escuchando en %s:%s",
         HTTP_HOST,
@@ -35,4 +47,11 @@ if __name__ == "__main__":
     )
 
     # run uvicorn
-    uvicorn.run(app, host=HTTP_HOST, port=HTTP_PORT, log_level="info")
+    uvicorn.run(
+        app,
+        host=HTTP_HOST,
+        port=HTTP_PORT,
+        log_level="info",
+        ssl_certfile=str(SSL_CERT_PATH),
+        ssl_keyfile=str(SSL_KEY_PATH),
+    )

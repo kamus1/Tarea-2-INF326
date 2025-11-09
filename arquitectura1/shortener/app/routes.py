@@ -4,7 +4,7 @@ import threading
 
 from litestar import Request, Response, get, post
 
-from .config import HTTP_HOST, HTTP_PORT
+from .config import BASE_URL
 from .grpc_client import send_url_hit
 from .service import create_short_url, resolve_hash
 
@@ -37,7 +37,7 @@ async def shorten_url(request: Request) -> Response | dict:
             status_code=500,
         )
 
-    short_url = f"http://{HTTP_HOST}:{HTTP_PORT}/{short_hash}"
+    short_url = f"{BASE_URL}/{short_hash}"
     logger.info(
         "POST /shorten: url=%s acortada a %s (hash=%s)",
         long_url,

@@ -3,7 +3,7 @@ Grupo 7
 
 Integrantes:
 
-    Javier Hormaechea: 
+    Javier Hormaechea: 202003017-0
     Benjamin Camus ROL: 202173072-9
 
 ### Requisitos
@@ -27,15 +27,31 @@ pip install -r requirements.txt
 
 ### Ejecutar Arquitectura 1
 
-1. Ejecutar shortener
+1. Generar (o regenerar) certificados TLS
+```shell
+python -m arquitectura1.shortener.generate_certs
+```
+
+2. Ejecutar shortener
 ```shell
 python -m arquitectura1.shortener.main
 ```
 
-2. Ejecutar el LogService
+3. Ejecutar el LogService
 ```shell
 python -m arquitectura1.log_service.main
 ```
+
+#### Endpoints Arquitectura 1
+
+- `POST https://127.0.0.1:8000/shorten`
+  - Cuerpo JSON: `{"url": "<url_larga>"}`.
+  - Respuesta: `{"short_url": "https://127.0.0.1:8000/<hash>"}`.
+  - Errores comunes: `400` si falta el campo `url`.
+- `GET https://127.0.0.1:8000/<hash>`
+  - Redirección `302` a la URL original (cabecera `Location`).
+  - Si el hash no existe, responde `404`.
+  - Cada petición genera un evento gRPC `UrlHit` hacia el LogService con timestamp y URL.
 
 ### Ejecutar Arquitectura 2
 
