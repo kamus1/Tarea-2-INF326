@@ -1,4 +1,10 @@
 # Tarea-2-INF326
+Grupo 7
+
+Integrantes:
+
+    Javier Hormaechea: 
+    Benjamin Camus ROL: 202173072-9
 
 ### Requerimientos
 
