@@ -6,6 +6,12 @@ Integrantes:
     Javier Hormaechea: 202003017-0
     Benjamin Camus ROL: 202173072-9
 
+
+### Consideraciones
+- Utilizamos SQLite para las bases de datos.
+- Se puede configurar los parámetros de arquitectura 2 como el rate limiter en `arquitectura2\shortener\app\config.py`, por default rate limiter está en 3 peticiones cada 15 segundos (pero esto solamente para que sea mas fácil probarlo y no esperar demasiado tiempo del rate limiter).
+
+
 ### Requisitos
 
 1. Estar en la ruta raíz del repositorio `Tarea-2-INF326`
