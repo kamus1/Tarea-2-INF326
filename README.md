@@ -10,7 +10,7 @@ Integrantes:
 ### Consideraciones
 - Utilizamos SQLite para las bases de datos.
 - Se puede configurar los parámetros de arquitectura 2 como el rate limiter en `arquitectura2\shortener\app\config.py`, por default rate limiter está en 3 peticiones cada 15 segundos (pero esto solamente para que sea mas fácil probarlo y no esperar demasiado tiempo del rate limiter).
-
+- Se necesita un venv de python para ejecutar las arquitecturas.
 
 ### Requisitos
 
